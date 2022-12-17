@@ -3,6 +3,7 @@ package com.itmo.AlcoMap.service;
 import com.itmo.AlcoMap.entity.Bar;
 import com.itmo.AlcoMap.entity.User;
 import com.itmo.AlcoMap.repository.BarRepository;
+import com.itmo.AlcoMap.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class BarService {
     private final UserService userService;
 
     private final BarRepository repository;
+    private final UserRepository userRepository;
 
     public Bar getById(int id) {
         Optional<Bar> bar = repository.findById(id);
@@ -36,6 +38,16 @@ public class BarService {
         if (user == null)
             return Collections.emptyList();
         List<Bar> result = repository.findAllByLikes(user);
+        if (result == null)
+            return Collections.emptyList();
+        return result;
+    }
+
+    public List<User> getUsersByBar(int barId) {
+        Bar bar = getById(barId);
+        if (bar == null)
+            return Collections.emptyList();
+        List<User> result = userRepository.findAllByLikedBars(bar);
         if (result == null)
             return Collections.emptyList();
         return result;
