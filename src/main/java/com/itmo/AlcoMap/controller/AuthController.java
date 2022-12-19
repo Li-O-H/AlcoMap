@@ -1,5 +1,6 @@
 package com.itmo.AlcoMap.controller;
 
+import com.itmo.AlcoMap.controller.response.TokenResponse;
 import com.itmo.AlcoMap.entity.User;
 import com.itmo.AlcoMap.exception.UserAlreadyExistsException;
 import com.itmo.AlcoMap.security.jwt.JwtProvider;
@@ -45,6 +46,6 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         String token = jwtProvider.generateToken(user.getLogin());
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(new TokenResponse(token));
     }
 }
