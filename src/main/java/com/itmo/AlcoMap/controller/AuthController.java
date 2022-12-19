@@ -35,7 +35,7 @@ public class AuthController {
         } catch (UserAlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok("Registered");
+        return login(new AuthRequest(request.getLogin(), request.getPassword()));
     }
 
     @PostMapping("/login")
