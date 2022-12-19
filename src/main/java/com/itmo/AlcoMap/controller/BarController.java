@@ -1,5 +1,6 @@
 package com.itmo.AlcoMap.controller;
 
+import com.itmo.AlcoMap.controller.response.MessageResponse;
 import com.itmo.AlcoMap.entity.Bar;
 import com.itmo.AlcoMap.service.BarService;
 import lombok.AllArgsConstructor;
@@ -40,13 +41,13 @@ public class BarController {
     public ResponseEntity<?> addLike(@RequestParam(value = "login") String login,
                                      @RequestParam(value = "barId") int barId) {
         service.addLike(login, barId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new MessageResponse("Like successfully added"));
     }
 
     @DeleteMapping(params = {"login", "barId"})
     public ResponseEntity<?> deleteLike(@RequestParam(value = "login") String login,
                                      @RequestParam(value = "barId") int barId) {
         service.deleteLike(login, barId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new MessageResponse("Like successfully deleted"));
     }
 }
