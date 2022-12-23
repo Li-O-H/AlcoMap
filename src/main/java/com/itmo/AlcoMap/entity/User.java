@@ -4,19 +4,13 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 
 @Data
 @Entity(name = "users")
 @Accessors(chain = true)
 public class User {
-
-
-//    @Column(name = "user_id")
-//    @Id
-//    @GeneratedValue(generator = "UUID")
-//    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-//    private UUID id;
 
     @Id
     @Column(name = "login", nullable = false)
@@ -27,9 +21,13 @@ public class User {
 
     @ManyToMany(targetEntity = Bar.class, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "bar_likes",
             joinColumns = @JoinColumn(name = "login"),
-            inverseJoinColumns = @JoinColumn(name = "bar_id"))
-    private List<Bar> likedBars;
+            inverseJoinColumns = {
+                    @JoinColumn(name = "name", referencedColumnName = "name"),
+                    @JoinColumn(name = "latitude", referencedColumnName = "latitude"),
+                    @JoinColumn(name = "longitude", referencedColumnName = "longitude")
+            },
+            name = "bar_likes")
+    private List<Bar> likedBars = Collections.emptyList();
 
 }

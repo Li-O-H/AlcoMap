@@ -1,5 +1,6 @@
 package com.itmo.AlcoMap.controller;
 
+import com.itmo.AlcoMap.entity.BarId;
 import com.itmo.AlcoMap.entity.User;
 import com.itmo.AlcoMap.service.BarService;
 import com.itmo.AlcoMap.service.UserService;
@@ -28,9 +29,11 @@ public class UserController {
         return new ResponseEntity<>("No such user", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(params = "bar")
-    public ResponseEntity<?> getUsersByBar(@RequestParam(value = "bar") int barId) {
-        List<User> list = barService.getUsersByBar(barId);
+    @GetMapping(params = {"name", "latitude", "longitude"})
+    public ResponseEntity<?> getUsersByBar(@RequestParam(value = "name") String name,
+                                           @RequestParam(value = "latitude") Float latitude,
+                                           @RequestParam(value = "longitude") Float longitude) {
+        List<User> list = barService.getUsersByBar(new BarId(name, latitude, longitude));
         return ResponseEntity.ok(list);
     }
 }
