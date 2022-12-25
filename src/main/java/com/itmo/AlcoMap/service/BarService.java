@@ -30,14 +30,14 @@ public class BarService {
         return bar.get();
     }
 
-    public List<Bar> getLikedBarsByUser(String login) {
+    public List<BarId> getLikedBarsByUser(String login) {
         User user = userService.getByLogin(login);
         if (user == null)
             return Collections.emptyList();
         List<Bar> result = repository.findAllByLikes(user);
         if (result == null)
             return Collections.emptyList();
-        return result;
+        return result.stream().map(Bar::getBarId).collect(Collectors.toList());
     }
 
     public List<User> getUsersByBar(BarId barId) {
