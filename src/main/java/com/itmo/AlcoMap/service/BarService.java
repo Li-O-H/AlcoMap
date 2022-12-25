@@ -50,6 +50,10 @@ public class BarService {
         return result;
     }
 
+    public Boolean hasUserLike(String login, String name, Float latitude, Float longitude) {
+        return getLikedBarsByUser(login).contains(getById(new BarId(name, latitude, longitude)));
+    }
+
     public void addBar(String name, Float latitude, Float longitude) {
         repository.save(new Bar(new BarId(name, latitude, longitude)));
     }
