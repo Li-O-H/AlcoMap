@@ -20,7 +20,10 @@ public class Bar {
     @ManyToMany(mappedBy = "likedBars")
     private List<User> likes = Collections.emptyList();
 
-    public Bar(BarId barId) {
+    private String address;
+
+    public Bar(BarId barId, String address) {
         this.barId = barId;
+        this.address = address;
     }
 }

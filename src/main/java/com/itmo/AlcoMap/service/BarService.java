@@ -1,5 +1,6 @@
 package com.itmo.AlcoMap.service;
 
+import com.itmo.AlcoMap.controller.response.BarResponse;
 import com.itmo.AlcoMap.entity.Bar;
 import com.itmo.AlcoMap.entity.BarId;
 import com.itmo.AlcoMap.entity.User;
@@ -30,14 +31,16 @@ public class BarService {
         return bar.get();
     }
 
-    public List<BarId> getLikedBarsByUser(String login) {
+    public List<BarResponse> getLikedBarsByUser(String login) {
         User user = userService.getByLogin(login);
         if (user == null)
             return Collections.emptyList();
         List<Bar> result = repository.findAllByLikes(user);
         if (result == null)
             return Collections.emptyList();
-        return result.stream().map(Bar::getBarId).collect(Collectors.toList());
+        return result.stream().map(bar -> new BarResponse(bar.getBarId().getName(),
+                bar.getBarId().getLatitude(), bar.getBarId().getLongitude(), bar.getAddress()))
+                .collect(Collectors.toList());
     }
 
     public List<User> getUsersByBar(BarId barId) {
@@ -51,21 +54,28 @@ public class BarService {
     }
 
     public Boolean hasUserLike(String login, String name, Float latitude, Float longitude) {
-        return getLikedBarsByUser(login).contains(getById(new BarId(name, latitude, longitude)));
+        User user = userService.getByLogin(login);
+        if (user == null)
+            return false;
+        List<Bar> result = repository.findAllByLikes(user);
+        if (result == null)
+            return false;
+        return result.stream().map(Bar::getBarId).collect(Collectors.toList())
+                .contains(new BarId(name, latitude, longitude));
     }
 
-    public void addBar(String name, Float latitude, Float longitude) {
-        repository.save(new Bar(new BarId(name, latitude, longitude)));
+    public void addBar(String name, Float latitude, Float longitude, String address) {
+        repository.save(new Bar(new BarId(name, latitude, longitude), address));
     }
 
-    public void addLike(String login, String name, Float latitude, Float longitude) {
+    public void addLike(String login, String name, Float latitude, Float longitude, String address) {
         User user = userService.getByLogin(login);
         Bar bar = getById(new BarId(name, latitude, longitude));
         if (user == null)
             return;
         if (bar == null) {
-            addBar(name, latitude, longitude);
-            addLike(login, name, latitude, longitude);
+            addBar(name, latitude, longitude, address);
+            addLike(login, name, latitude, longitude, address);
             return;
         }
         if (bar.getLikes().contains(user)) {
