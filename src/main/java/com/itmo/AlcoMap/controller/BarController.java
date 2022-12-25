@@ -1,6 +1,6 @@
 package com.itmo.AlcoMap.controller;
 
-import com.itmo.AlcoMap.controller.response.MessageResponse;
+import com.itmo.AlcoMap.controller.response.ObjectResponse;
 import com.itmo.AlcoMap.entity.Bar;
 import com.itmo.AlcoMap.service.BarService;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ public class BarController {
     @GetMapping(params = "login")
     public ResponseEntity<?> getLikedBarsByUser(@RequestParam(value = "login") String login) {
         List<Bar> list = service.getLikedBarsByUser(login);
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(new ObjectResponse(list));
     }
 
     @PostMapping(params = {"login", "name", "latitude", "longitude"})
@@ -28,6 +28,6 @@ public class BarController {
                                      @RequestParam(value = "latitude") Float latitude,
                                      @RequestParam(value = "longitude") Float longitude) {
         service.addLike(login, name, latitude, longitude);
-        return ResponseEntity.ok(new MessageResponse("Like successfully added/removed"));
+        return ResponseEntity.ok(new ObjectResponse("Like successfully added/removed"));
     }
 }

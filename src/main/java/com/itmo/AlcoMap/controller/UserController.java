@@ -1,6 +1,6 @@
 package com.itmo.AlcoMap.controller;
 
-import com.itmo.AlcoMap.controller.response.MessageResponse;
+import com.itmo.AlcoMap.controller.response.ObjectResponse;
 import com.itmo.AlcoMap.entity.BarId;
 import com.itmo.AlcoMap.entity.User;
 import com.itmo.AlcoMap.service.BarService;
@@ -25,7 +25,7 @@ public class UserController {
     public ResponseEntity<?> getUser(@PathVariable String login) {
         User user = service.getByLogin(login);
         if (user != null) {
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(new ObjectResponse(user));
         }
         return new ResponseEntity<>("No such user", HttpStatus.NOT_FOUND);
     }
@@ -35,7 +35,7 @@ public class UserController {
                                            @RequestParam(value = "latitude") Float latitude,
                                            @RequestParam(value = "longitude") Float longitude) {
         List<User> list = barService.getUsersByBar(new BarId(name, latitude, longitude));
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(new ObjectResponse(list));
     }
 
     @GetMapping(params = {"name", "latitude", "longitude"}, path = "/{login}/haslike")
@@ -43,6 +43,6 @@ public class UserController {
                                          @RequestParam(value = "name") String name,
                                          @RequestParam(value = "latitude") Float latitude,
                                          @RequestParam(value = "longitude") Float longitude) {
-        return ResponseEntity.ok(new MessageResponse(barService.hasUserLike(login, name, latitude, longitude).toString()));
+        return ResponseEntity.ok(new ObjectResponse(barService.hasUserLike(login, name, latitude, longitude).toString()));
     }
 }
