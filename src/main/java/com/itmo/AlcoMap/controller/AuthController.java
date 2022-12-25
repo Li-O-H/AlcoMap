@@ -35,7 +35,7 @@ public class AuthController {
         try {
             userService.save(user);
         } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.ok(new ObjectResponse(e.getMessage()));
         }
         return login(new AuthRequest(request.getLogin(), request.getPassword()));
     }

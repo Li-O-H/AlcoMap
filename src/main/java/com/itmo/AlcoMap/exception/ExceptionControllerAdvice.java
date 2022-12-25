@@ -19,7 +19,7 @@ public class ExceptionControllerAdvice {
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((ObjectError) error).getObjectName();
+            String fieldName = "object";
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
