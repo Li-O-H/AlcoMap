@@ -68,19 +68,17 @@ public class BarService {
         repository.save(new Bar(new BarId(name, latitude, longitude), address));
     }
 
-    public void addLike(String login, String name, Float latitude, Float longitude, String address) {
+    public Boolean addLike(String login, String name, Float latitude, Float longitude, String address) {
         User user = userService.getByLogin(login);
         Bar bar = getById(new BarId(name, latitude, longitude));
         if (user == null)
-            return;
+            return null;
         if (bar == null) {
             addBar(name, latitude, longitude, address);
-            addLike(login, name, latitude, longitude, address);
-            return;
+            return addLike(login, name, latitude, longitude, address);
         }
         if (bar.getLikes().contains(user)) {
-            deleteLike(login, name, latitude, longitude);
-            return;
+            return deleteLike(login, name, latitude, longitude);
         }
         bar.getLikes()
                 .addAll(Collections.singletonList(user)
@@ -91,13 +89,14 @@ public class BarService {
                             return uu;
                         }).collect(Collectors.toList()));
         repository.save(bar);
+        return true;
     }
 
-    public void deleteLike(String login, String name, Float latitude, Float longitude) {
+    public Boolean deleteLike(String login, String name, Float latitude, Float longitude) {
         User user = userService.getByLogin(login);
         Optional<Bar> bar = repository.findById(new BarId(name, latitude, longitude));
         if (bar.isEmpty() || user == null)
-            return;
+            return null;
         bar.get().getLikes()
                 .addAll(Collections.singletonList(user)
                         .stream()
@@ -107,5 +106,6 @@ public class BarService {
                             return uu;
                         }).collect(Collectors.toList()));
         repository.save(bar.get());
+        return false;
     }
 }

@@ -6,7 +6,6 @@ import com.itmo.AlcoMap.entity.User;
 import com.itmo.AlcoMap.service.BarService;
 import com.itmo.AlcoMap.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class UserController {
         if (user != null) {
             return ResponseEntity.ok(new ObjectResponse(user));
         }
-        return new ResponseEntity<>("No such user", HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(new ObjectResponse("Пользователь не найден"));
     }
 
     @GetMapping(params = {"name", "latitude", "longitude"})

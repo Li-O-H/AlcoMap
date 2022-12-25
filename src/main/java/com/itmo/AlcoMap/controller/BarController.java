@@ -30,7 +30,15 @@ public class BarController {
                                      @RequestParam(value = "latitude") Float latitude,
                                      @RequestParam(value = "longitude") Float longitude,
                                      @RequestParam(value = "address") String address) {
-        service.addLike(login, name, latitude, longitude, address);
-        return ResponseEntity.ok(new ObjectResponse("Like successfully added/removed"));
+        Boolean success = service.addLike(login, name, latitude, longitude, address);
+        if (success == null) {
+            return ResponseEntity.ok(new ObjectResponse("Бар или пользователь не найден"));
+        } else {
+            if (success) {
+                return ResponseEntity.ok(new ObjectResponse("Лайк успешно поставлен"));
+            } else {
+                return ResponseEntity.ok(new ObjectResponse("Лайк успешно убран"));
+            }
+        }
     }
 }

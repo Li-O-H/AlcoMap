@@ -1,5 +1,6 @@
 package com.itmo.AlcoMap.controller;
 
+import com.itmo.AlcoMap.controller.response.ObjectResponse;
 import com.itmo.AlcoMap.controller.response.TokenResponse;
 import com.itmo.AlcoMap.entity.User;
 import com.itmo.AlcoMap.exception.UserAlreadyExistsException;
@@ -34,7 +35,7 @@ public class AuthController {
         try {
             userService.save(user);
         } catch (UserAlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(e.getMessage());
         }
         return login(new AuthRequest(request.getLogin(), request.getPassword()));
     }
@@ -43,7 +44,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
         User user = userService.getByLoginAndPassword(request.getLogin(), request.getPassword());
         if (user == null){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return ResponseEntity.ok(new ObjectResponse("Неверный логин или пароль"));
         }
         String token = jwtProvider.generateToken(user.getLogin());
         return ResponseEntity.ok(new TokenResponse(token));
